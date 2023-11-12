@@ -1,18 +1,17 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public sealed class RamFiller : MonoBehaviour
 {
     [SerializeField] private int cellsCount;
     [SerializeField] private GameObject cell;
+    [SerializeField] private Image separator;
     [SerializeField] private RectTransform parent;
 
     private List<TMP_Text> cells = new();
-    [CanBeNull] public Action<RamFiller> OnGenerated = null;
 
     public IReadOnlyList<TMP_Text> Cells => cells;
 
@@ -23,9 +22,16 @@ public sealed class RamFiller : MonoBehaviour
 
     private void Generate()
     {
-        var rect = parent.rect;
+        var array = DrawCells(parent.rect);
+        cells = new List<TMP_Text>(array);
+
+        DrawSeparators(parent.rect);
+    }
+
+    private IEnumerable<TMP_Text> DrawCells(Rect rect)
+    {
         var w = rect.size.x / cellsCount;
-        var h = w;
+        var h = rect.size.y / cellsCount;
 
         var xPos = rect.x;
         var yPos = rect.y + h * (cellsCount - 1);
@@ -55,9 +61,36 @@ public sealed class RamFiller : MonoBehaviour
             xPos += w;
         }
 
-        cells = new List<TMP_Text>(array);
+        return array;
+    }
 
-        OnGenerated?.Invoke(this);
+    private void DrawSeparators(Rect rect)
+    {
+        const int size = 5;
+
+        // horizontals
+        var curX = rect.x;
+        for (var i = 0; i < cellsCount - 1; i++)
+        {
+            curX += rect.size.x / cellsCount;
+
+            var sep = Instantiate(separator, parent);
+
+            sep.transform.localPosition = new Vector2(curX, rect.y + rect.size.y / 2);
+            sep.GetComponent<RectTransform>().sizeDelta = new Vector2(size, rect.size.y);
+        }
+
+        // verticals
+        var curY = rect.y;
+        for (var i = 0; i < cellsCount - 1; i++)
+        {
+            curY += rect.size.y / cellsCount;
+
+            var sep = Instantiate(separator, parent);
+
+            sep.transform.localPosition = new Vector2(rect.x + rect.size.x / 2, curY);
+            sep.GetComponent<RectTransform>().sizeDelta = new Vector2(rect.size.x, size);
+        }
     }
 
 

@@ -19,9 +19,13 @@ public sealed class AssemblerInterpreter
 
     private void Execute()
     {
-        gameManager.UiManager.Blink(MainExecute);
-        gameManager.UiManager.RamFiller.Clear();
-        gameManager.UiManager.Clear();
+        gameManager.UiManager.Blink(() =>
+        {
+            gameManager.UiManager.RamFiller.Clear();
+            gameManager.UiManager.Clear();
+            
+            MainExecute();
+        });
     }
 
     private void MainExecute()
@@ -47,7 +51,7 @@ public sealed class AssemblerInterpreter
 
     private void PrintErrors(List<int> errors, AsmEngine engine)
     {
-        foreach (var e in errors.Distinct()) 
+        foreach (var e in errors.Distinct())
             engine.Print($"Ошибка {e}");
     }
 }

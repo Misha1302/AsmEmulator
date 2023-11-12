@@ -52,14 +52,14 @@ public sealed class UiManager : MonoBehaviour
         blinkAnimator.gameObject.SetActive(true);
         blinkAnimator.SetTrigger(_start);
 
-        StartCoroutine(ExecuteAfter(callback, blinkTime));
+        StartCoroutine(ExecuteAfter(callback, blinkTime / 2));
+        StartCoroutine(ExecuteAfter(() => blinkAnimator.gameObject.SetActive(false), blinkTime));
     }
 
-    private IEnumerator ExecuteAfter(Action callback, float f)
+    private static IEnumerator ExecuteAfter(Action callback, float f)
     {
         yield return new WaitForSeconds(f);
         callback();
-        blinkAnimator.gameObject.SetActive(false);
     }
 
     public void Popup(string str)
