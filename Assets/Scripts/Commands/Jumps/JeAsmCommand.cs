@@ -1,5 +1,7 @@
 ﻿namespace Commands.Jumps
 {
+    using Asm;
+
     public class JeAsmCommand : AsmCommand
     {
         static JeAsmCommand()

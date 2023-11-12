@@ -2,42 +2,45 @@
 using TMPro;
 using UnityEngine;
 
-public sealed class InOutUi : MonoBehaviour
+namespace Ui
 {
-    [SerializeField] private TMP_InputField textInput;
-    [SerializeField] private GameObject popupGroup;
-    [SerializeField] private GameObject popup;
-
-    private List<GameObject> popups = new();
-
-    public TMP_InputField TextInput => textInput;
-
-
-    public void Out(string str)
+    public sealed class InOutUi : MonoBehaviour
     {
-        var obj = Instantiate(popup, popupGroup.transform);
-        obj.GetComponentInChildren<TMP_Text>().text = str;
-        popups.Add(obj);
+        [SerializeField] private TMP_InputField textInput;
+        [SerializeField] private GameObject popupGroup;
+        [SerializeField] private GameObject popup;
 
-        if (popups.Count > 4)
+        private List<GameObject> popups = new();
+
+        public TMP_InputField TextInput => textInput;
+
+
+        public void Out(string str)
         {
-            Destroy(popups[0]);
-            popups.RemoveAt(0);
+            var obj = Instantiate(popup, popupGroup.transform);
+            obj.GetComponentInChildren<TMP_Text>().text = str;
+            popups.Add(obj);
+
+            if (popups.Count > 4)
+            {
+                Destroy(popups[0]);
+                popups.RemoveAt(0);
+            }
+
+            for (var i = 0; i < popups.Count;)
+                if (popups[i] == null) popups.RemoveAt(i);
+                else i++;
+
+            Destroy(obj, 7);
         }
 
-        for (var i = 0; i < popups.Count;)
-            if (popups[i] == null) popups.RemoveAt(i);
-            else i++;
 
-        Destroy(obj, 7);
-    }
+        public void Clear()
+        {
+            foreach (var p in popups)
+                Destroy(p);
 
-
-    public void Clear()
-    {
-        foreach (var p in popups)
-            Destroy(p);
-
-        popups = new List<GameObject>();
+            popups = new List<GameObject>();
+        }
     }
 }

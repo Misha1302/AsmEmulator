@@ -1,19 +1,22 @@
 ﻿using TMPro;
 using UnityEngine;
 
-public sealed class RegsUi : MonoBehaviour
+namespace Ui
 {
-    [SerializeField] private TMP_Text[] registers;
-
-    public void UpdateRegs(int[] regs)
+    public sealed class RegsUi : MonoBehaviour
     {
-        for (var i = 0; i < regs.Length; i++)
-            registers[i].text = regs[i].ToString();
-    }
+        [SerializeField] private TMP_Text[] registers;
 
-    public void Clear()
-    {
-        foreach (var t in registers)
-            t.text = "0";
+        public void UpdateRegs(int[] regs)
+        {
+            for (var i = 0; i < regs.Length; i++)
+                registers[i].text = regs[i].ToString();
+        }
+
+        public void Clear()
+        {
+            foreach (var t in registers)
+                t.text = "0";
+        }
     }
 }

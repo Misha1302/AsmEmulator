@@ -4,105 +4,108 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class RamUi : MonoBehaviour
+namespace Ui
 {
-    [SerializeField] private int cellsCount;
-    [SerializeField] private GameObject cell;
-    [SerializeField] private Image separator;
-    [SerializeField] private RectTransform parent;
-
-    private List<TMP_Text> cells = new();
-
-    public IReadOnlyList<TMP_Text> Cells => cells;
-
-    private void Start()
+    public sealed class RamUi : MonoBehaviour
     {
-        Generate();
-    }
+        [SerializeField] private int cellsCount;
+        [SerializeField] private GameObject cell;
+        [SerializeField] private Image separator;
+        [SerializeField] private RectTransform parent;
 
-    private void Generate()
-    {
-        var array = DrawCells(parent.rect);
-        cells = new List<TMP_Text>(array);
+        private List<TMP_Text> cells = new();
 
-        DrawSeparators(parent.rect);
-    }
+        public IReadOnlyList<TMP_Text> Cells => cells;
 
-    private IEnumerable<TMP_Text> DrawCells(Rect rect)
-    {
-        var w = rect.size.x / cellsCount;
-        var h = rect.size.y / cellsCount;
-
-        var xPos = rect.x;
-        var yPos = rect.y + h * (cellsCount - 1);
-
-        var array = new TMP_Text[cellsCount * cellsCount];
-
-        for (var j = 0; j < cellsCount; j++)
+        private void Start()
         {
-            for (var i = 0; i < cellsCount; i++)
+            Generate();
+        }
+
+        private void Generate()
+        {
+            var array = DrawCells(parent.rect);
+            cells = new List<TMP_Text>(array);
+
+            DrawSeparators(parent.rect);
+        }
+
+        private IEnumerable<TMP_Text> DrawCells(Rect rect)
+        {
+            var w = rect.size.x / cellsCount;
+            var h = rect.size.y / cellsCount;
+
+            var xPos = rect.x;
+            var yPos = rect.y + h * (cellsCount - 1);
+
+            var array = new TMP_Text[cellsCount * cellsCount];
+
+            for (var j = 0; j < cellsCount; j++)
             {
-                var t = Instantiate(cell, parent).transform;
+                for (var i = 0; i < cellsCount; i++)
+                {
+                    var t = Instantiate(cell, parent).transform;
 
-                var texts = t.GetComponentsInChildren<TMP_Text>();
-                var number = texts.First(x => x.CompareTag("NumberText"));
-                var value = texts.First(x => x.CompareTag("ValueText"));
+                    var texts = t.GetComponentsInChildren<TMP_Text>();
+                    var number = texts.First(x => x.CompareTag("NumberText"));
+                    var value = texts.First(x => x.CompareTag("ValueText"));
 
-                number.text = $"{j + i * cellsCount}";
-                t.GetComponent<RectTransform>().sizeDelta = new Vector3(w, h);
-                t.localPosition = new Vector3(xPos + w / 2, yPos + h / 2);
+                    number.text = $"{j + i * cellsCount}";
+                    t.GetComponent<RectTransform>().sizeDelta = new Vector3(w, h);
+                    t.localPosition = new Vector3(xPos + w / 2, yPos + h / 2);
 
-                array[j + i * cellsCount] = value;
+                    array[j + i * cellsCount] = value;
 
-                yPos -= h;
+                    yPos -= h;
+                }
+
+                yPos = rect.y + h * (cellsCount - 1);
+                xPos += w;
             }
 
-            yPos = rect.y + h * (cellsCount - 1);
-            xPos += w;
+            return array;
         }
 
-        return array;
-    }
-
-    private void DrawSeparators(Rect rect)
-    {
-        const int size = 5;
-
-        // horizontals
-        var curX = rect.x;
-        for (var i = 0; i < cellsCount - 1; i++)
+        private void DrawSeparators(Rect rect)
         {
-            curX += rect.size.x / cellsCount;
+            const int size = 5;
 
-            var sep = Instantiate(separator, parent);
+            // horizontals
+            var curX = rect.x;
+            for (var i = 0; i < cellsCount - 1; i++)
+            {
+                curX += rect.size.x / cellsCount;
 
-            sep.transform.localPosition = new Vector2(curX, rect.y + rect.size.y / 2);
-            sep.GetComponent<RectTransform>().sizeDelta = new Vector2(size, rect.size.y);
+                var sep = Instantiate(separator, parent);
+
+                sep.transform.localPosition = new Vector2(curX, rect.y + rect.size.y / 2);
+                sep.GetComponent<RectTransform>().sizeDelta = new Vector2(size, rect.size.y);
+            }
+
+            // verticals
+            var curY = rect.y;
+            for (var i = 0; i < cellsCount - 1; i++)
+            {
+                curY += rect.size.y / cellsCount;
+
+                var sep = Instantiate(separator, parent);
+
+                sep.transform.localPosition = new Vector2(rect.x + rect.size.x / 2, curY);
+                sep.GetComponent<RectTransform>().sizeDelta = new Vector2(rect.size.x, size);
+            }
         }
 
-        // verticals
-        var curY = rect.y;
-        for (var i = 0; i < cellsCount - 1; i++)
+
+        public void UpdateRam(List<int> ram)
         {
-            curY += rect.size.y / cellsCount;
-
-            var sep = Instantiate(separator, parent);
-
-            sep.transform.localPosition = new Vector2(rect.x + rect.size.x / 2, curY);
-            sep.GetComponent<RectTransform>().sizeDelta = new Vector2(rect.size.x, size);
+            for (var i = 0; i < cells.Count; i++)
+                cells[i].text = ram[i].ToString();
         }
-    }
 
-
-    public void UpdateRam(List<int> ram)
-    {
-        for (var i = 0; i < cells.Count; i++)
-            cells[i].text = ram[i].ToString();
-    }
-
-    public void Clear()
-    {
-        foreach (var t in cells)
-            t.text = "0";
+        public void Clear()
+        {
+            foreach (var t in cells)
+                t.text = "0";
+        }
     }
 }

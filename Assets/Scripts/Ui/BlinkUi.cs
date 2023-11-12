@@ -2,30 +2,33 @@
 using System.Collections;
 using UnityEngine;
 
-public sealed class BlinkUi : MonoBehaviour
+namespace Ui
 {
-    private static readonly int _start = Animator.StringToHash("start");
-
-    [SerializeField] private Animator blinkAnimator;
-    [SerializeField] private float blinkTime;
-
-    private void Start()
+    public sealed class BlinkUi : MonoBehaviour
     {
-        blinkAnimator.gameObject.SetActive(false);
-    }
+        private static readonly int _start = Animator.StringToHash("start");
 
-    public void Blink(Action callback)
-    {
-        blinkAnimator.gameObject.SetActive(true);
-        blinkAnimator.SetTrigger(_start);
+        [SerializeField] private Animator blinkAnimator;
+        [SerializeField] private float blinkTime;
 
-        StartCoroutine(ExecuteAfter(callback, blinkTime / 2));
-        StartCoroutine(ExecuteAfter(() => blinkAnimator.gameObject.SetActive(false), blinkTime));
-    }
+        private void Start()
+        {
+            blinkAnimator.gameObject.SetActive(false);
+        }
 
-    private static IEnumerator ExecuteAfter(Action callback, float f)
-    {
-        yield return new WaitForSeconds(f);
-        callback();
+        public void Blink(Action callback)
+        {
+            blinkAnimator.gameObject.SetActive(true);
+            blinkAnimator.SetTrigger(_start);
+
+            StartCoroutine(ExecuteAfter(callback, blinkTime / 2));
+            StartCoroutine(ExecuteAfter(() => blinkAnimator.gameObject.SetActive(false), blinkTime));
+        }
+
+        private static IEnumerator ExecuteAfter(Action callback, float f)
+        {
+            yield return new WaitForSeconds(f);
+            callback();
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Commands
+﻿namespace Asm
 {
     public sealed class AsmFlags
     {

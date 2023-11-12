@@ -1,5 +1,7 @@
 ﻿namespace Commands
 {
+    using Asm;
+
     public class SetSpeedAsmCommand : AsmCommand
     {
         static SetSpeedAsmCommand()

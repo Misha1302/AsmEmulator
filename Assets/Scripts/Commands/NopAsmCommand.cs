@@ -1,5 +1,7 @@
 ﻿namespace Commands
 {
+    using Asm;
+
     public sealed class NopAsmCommand : AsmCommand
     {
         static NopAsmCommand()
