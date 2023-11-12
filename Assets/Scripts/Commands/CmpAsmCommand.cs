@@ -4,7 +4,7 @@
     {
         static CmpAsmCommand()
         {
-            Init("cmp", 3, (engine, values) => new CmpAsmCommand(engine, values));
+            Init("cmp", 2, (engine, values) => new CmpAsmCommand(engine, values));
         }
 
         public CmpAsmCommand(AsmEngine engine, AsmValue[] values) : base(engine, values)

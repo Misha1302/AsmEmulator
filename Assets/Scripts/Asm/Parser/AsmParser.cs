@@ -18,6 +18,7 @@ public sealed class AsmParser
     {
         var commands = new List<AsmCommand>();
 
+        // need to fix!
         AsmCommand.CallStaticConstructorsOfChildren();
 
 
@@ -40,22 +41,40 @@ public sealed class AsmParser
 
             i += cmd.name.Length;
 
-            var asmValues = new AsmValue[3];
-            asmValues[0] = GetValue(ref i, engine, out var success1);
-            asmValues[1] = GetValue(ref i, engine, out var success2);
-            asmValues[2] = GetValue(ref i, engine, out var success3);
-
-            if (!success1 || !success2 || !success3)
+            var asmValues = ParseArgs(engine, cmd.argsCount, ref i, out var success);
+            if (!success)
             {
                 errors.Add(code.CountLines(i));
                 continue;
             }
 
-
             commands.Add(cmd.cmd(engine, asmValues));
         }
 
         return commands;
+    }
+
+    private AsmValue[] ParseArgs(AsmEngine engine, int argsCount, ref int i, out bool success)
+    {
+        success = true;
+
+        var asmValues = new AsmValue[argsCount];
+        for (var j = 0; j < argsCount; j++)
+        {
+            asmValues[j] = GetValue(ref i, engine, out success);
+
+            if (!success || asmValues[j] == null)
+            {
+                success = false;
+                return asmValues;
+            }
+        }
+
+        // if extra arg
+        if (GetValue(ref i, engine, out _) != null)
+            success = false;
+
+        return asmValues;
     }
 
     [CanBeNull]

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using JetBrains.Annotations;
 
-public static class Extensions
+public static class AsmParserExtensions
 {
     [Pure] public static bool IsNumber(this char c) => char.IsDigit(c) || c == '-';
     [Pure] public static bool IsReg(this char c) => c == 'r';

@@ -21,6 +21,8 @@ public sealed class AssemblerInterpreter
     {
         gameManager.UiManager.BlinkUi.Blink(() =>
         {
+            gameManager.StopAllCoroutines();
+            
             gameManager.UiManager.RamUi.Clear();
             gameManager.UiManager.InOutUi.Clear();
             gameManager.UiManager.RegsUi.Clear();
@@ -35,6 +37,7 @@ public sealed class AssemblerInterpreter
 
         var engine = new AsmEngine(gameManager.UiManager.RamUi.Cells.Select(_ => 0).ToList(),
             new List<AsmCommand>(), gameManager);
+        
         var errors = new List<int>();
         engine.Commands = new AsmParser(code).Decode(engine, errors);
         if (errors.Count != 0)
@@ -46,7 +49,6 @@ public sealed class AssemblerInterpreter
         engine.OnRamChanged += gameManager.UiManager.RamUi.UpdateRam;
         engine.OnRegChanged += gameManager.UiManager.RegsUi.UpdateRegs;
 
-        gameManager.StopAllCoroutines();
         gameManager.StartCoroutine(engine.Execute());
     }
 
