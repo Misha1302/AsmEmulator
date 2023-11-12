@@ -3,12 +3,13 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Net.Http.Headers;
     using JetBrains.Annotations;
     using UnityEngine;
 
     public sealed class AsmEngine
     {
+        public const int RegsCount = 4;
+        
         public int Speed = 1000;
 
         public int Ip;
@@ -16,7 +17,7 @@
         public List<AsmCommand> Commands;
         private readonly GameManager gameManager;
         private readonly List<int> ram;
-        private readonly int[] reg = new int[4];
+        private readonly int[] reg = new int[RegsCount];
 
         [CanBeNull] public Action<List<int>> OnRamChanged = null;
         [CanBeNull] public Action<int[]> OnRegChanged = null;
