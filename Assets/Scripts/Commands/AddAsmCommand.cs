@@ -1,5 +1,7 @@
 ﻿namespace Commands
 {
+    using Asm;
+
     public class AddAsmCommand : AsmCommand
     {
         static AddAsmCommand()

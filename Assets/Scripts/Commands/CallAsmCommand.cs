@@ -1,5 +1,7 @@
 ﻿namespace Commands
 {
+    using Asm;
+
     public class CallAsmCommand : AsmCommand
     {
         static CallAsmCommand()

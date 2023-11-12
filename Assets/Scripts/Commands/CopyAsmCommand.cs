@@ -1,5 +1,7 @@
 ﻿namespace Commands
 {
+    using Asm;
+
     public class CopyAsmCommand : AsmCommand
     {
         static CopyAsmCommand()

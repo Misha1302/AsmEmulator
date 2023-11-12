@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Asm;
+using Asm.Parser;
 using Commands;
 
 public sealed class AssemblerInterpreter
@@ -10,26 +12,34 @@ public sealed class AssemblerInterpreter
     {
         gameManager = gm;
         gm.InputManager.StartButtonPressed += Execute;
-        gm.InputManager.SaveButtonPressed += () => SaveManager.Save(gm.UiManager.TextInput.text);
-        gm.InputManager.LoadButtonPressed += () => SaveManager.Load(code => gm.UiManager.TextInput.text = code);
-        gm.OnAppExit += () => SaveManager.OnAppExit(gm.UiManager.TextInput.text);
+        gm.InputManager.SaveButtonPressed += () => SaveManager.Save(gm.UiManager.InOutUi.TextInput.text);
+        gm.InputManager.LoadButtonPressed += () => SaveManager.Load(code => gm.UiManager.InOutUi.TextInput.text = code);
+        gm.OnAppExit += () => SaveManager.OnAppExit(gm.UiManager.InOutUi.TextInput.text);
 
-        gameManager.UiManager.TextInput.text = SaveManager.OnAppStart();
+        gameManager.UiManager.InOutUi.TextInput.text = SaveManager.OnAppStart();
     }
 
     private void Execute()
     {
-        gameManager.UiManager.Blink(MainExecute);
-        gameManager.UiManager.RamFiller.Clear();
-        gameManager.UiManager.Clear();
+        gameManager.UiManager.BlinkUi.Blink(() =>
+        {
+            gameManager.StopAllCoroutines();
+
+            gameManager.UiManager.RamUi.Clear();
+            gameManager.UiManager.InOutUi.Clear();
+            gameManager.UiManager.RegsUi.Clear();
+
+            MainExecute();
+        });
     }
 
     private void MainExecute()
     {
-        var code = gameManager.UiManager.TextInput.text;
+        var code = gameManager.UiManager.InOutUi.TextInput.text;
 
-        var engine = new AsmEngine(gameManager.UiManager.RamFiller.Cells.Select(_ => 0).ToList(),
+        var engine = new AsmEngine(gameManager.UiManager.RamUi.Cells.Select(_ => 0).ToList(),
             new List<AsmCommand>(), gameManager);
+
         var errors = new List<int>();
         engine.Commands = new AsmParser(code).Decode(engine, errors);
         if (errors.Count != 0)
@@ -38,16 +48,15 @@ public sealed class AssemblerInterpreter
             return;
         }
 
-        engine.OnRamChanged += gameManager.UiManager.RamFiller.UpdateRam;
-        engine.OnRegChanged += gameManager.UiManager.UpdateRegs;
+        engine.OnRamChanged += gameManager.UiManager.RamUi.UpdateRam;
+        engine.OnRegChanged += gameManager.UiManager.RegsUi.UpdateRegs;
 
-        gameManager.StopAllCoroutines();
         gameManager.StartCoroutine(engine.Execute());
     }
 
-    private void PrintErrors(List<int> errors, AsmEngine engine)
+    private static void PrintErrors(IEnumerable<int> errors, AsmEngine engine)
     {
-        foreach (var e in errors.Distinct()) 
-            engine.Print($"Ошибка {e}");
+        foreach (var e in errors.Distinct())
+            engine.Out($"Error: {e}");
     }
 }

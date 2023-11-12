@@ -1,10 +1,12 @@
 ﻿namespace Commands
 {
+    using Asm;
+
     public class SetSpeedAsmCommand : AsmCommand
     {
         static SetSpeedAsmCommand()
         {
-            Init("stspd", 2, (engine, values) => new SetSpeedAsmCommand(engine, values));
+            Init("stspd", 1, (engine, values) => new SetSpeedAsmCommand(engine, values));
         }
 
         public SetSpeedAsmCommand(AsmEngine engine, AsmValue[] values) : base(engine, values)

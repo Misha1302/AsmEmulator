@@ -1,5 +1,7 @@
 ﻿namespace Commands
 {
+    using Asm;
+
     public class PrintAsmCommand : AsmCommand
     {
         static PrintAsmCommand()
@@ -13,7 +15,7 @@
 
         public override void Execute()
         {
-            Engine.Print(Values[0].Value);
+            Engine.Out(Values[0].Value);
         }
     }
 }
