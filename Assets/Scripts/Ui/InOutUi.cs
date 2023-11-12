@@ -1,18 +1,22 @@
-﻿using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-
-namespace Ui
+﻿namespace Ui
 {
+    using System;
+    using System.Collections.Generic;
+    using TMPro;
+    using UnityEngine;
+
     public sealed class InOutUi : MonoBehaviour
     {
-        [SerializeField] private TMP_InputField textInput;
+        [SerializeField] private TMP_InputField codeField;
+
+        [SerializeField] private TMP_InputField input;
+
         [SerializeField] private GameObject popupGroup;
         [SerializeField] private GameObject popup;
 
         private List<GameObject> popups = new();
 
-        public TMP_InputField TextInput => textInput;
+        public TMP_InputField CodeField => codeField;
 
 
         public void Out(string str)
@@ -41,6 +45,20 @@ namespace Ui
                 Destroy(p);
 
             popups = new List<GameObject>();
+        }
+
+        public void In(Action<string> callback)
+        {
+            input.gameObject.SetActive(true);
+
+            input.onSubmit.AddListener(Call);
+
+            void Call(string s)
+            {
+                callback(s);
+                input.onSubmit.RemoveListener(Call);
+                input.gameObject.SetActive(false);
+            }
         }
     }
 }

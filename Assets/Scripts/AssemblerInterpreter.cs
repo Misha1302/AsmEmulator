@@ -12,11 +12,11 @@ public sealed class AssemblerInterpreter
     {
         gameManager = gm;
         gm.InputManager.StartButtonPressed += Execute;
-        gm.InputManager.SaveButtonPressed += () => SaveManager.Save(gm.UiManager.InOutUi.TextInput.text);
-        gm.InputManager.LoadButtonPressed += () => SaveManager.Load(code => gm.UiManager.InOutUi.TextInput.text = code);
-        gm.OnAppExit += () => SaveManager.OnAppExit(gm.UiManager.InOutUi.TextInput.text);
+        gm.InputManager.SaveButtonPressed += () => SaveManager.Save(gm.UiManager.InOutUi.CodeField.text);
+        gm.InputManager.LoadButtonPressed += () => SaveManager.Load(code => gm.UiManager.InOutUi.CodeField.text = code);
+        gm.OnAppExit += () => SaveManager.OnAppExit(gm.UiManager.InOutUi.CodeField.text);
 
-        gameManager.UiManager.InOutUi.TextInput.text = SaveManager.OnAppStart();
+        gameManager.UiManager.InOutUi.CodeField.text = SaveManager.OnAppStart();
     }
 
     private void Execute()
@@ -35,7 +35,7 @@ public sealed class AssemblerInterpreter
 
     private void MainExecute()
     {
-        var code = gameManager.UiManager.InOutUi.TextInput.text;
+        var code = gameManager.UiManager.InOutUi.CodeField.text;
 
         var engine = new AsmEngine(gameManager.UiManager.RamUi.Cells.Select(_ => 0).ToList(),
             new List<AsmCommand>(), gameManager);

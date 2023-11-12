@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using JetBrains.Annotations;
-using UnityEngine;
-
-namespace Asm
+﻿namespace Asm
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using Commands;
+    using JetBrains.Annotations;
+    using UnityEngine;
 
     public sealed class AsmEngine
     {
@@ -68,14 +67,10 @@ namespace Asm
             }
         }
 
-        public void Halt()
-        {
-            Ip = Commands.Count;
-        }
+        public void Halt() => Ip = Commands.Count;
 
-        public void Out<T>(T value)
-        {
-            gameManager.UiManager.InOutUi.Out(value.ToString());
-        }
+        public void Out<T>(T value) => gameManager.UiManager.InOutUi.Out(value.ToString());
+
+        public void In(Action<string> callback) => gameManager.UiManager.InOutUi.In(callback);
     }
 }
