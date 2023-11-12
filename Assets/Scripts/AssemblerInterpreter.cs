@@ -23,7 +23,7 @@ public sealed class AssemblerInterpreter
         {
             gameManager.UiManager.RamFiller.Clear();
             gameManager.UiManager.Clear();
-            
+
             MainExecute();
         });
     }

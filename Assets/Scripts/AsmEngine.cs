@@ -8,7 +8,7 @@ using UnityEngine;
 public sealed class AsmEngine
 {
     public const int RegsCount = 4;
-        
+
     public int Speed = 1000;
 
     public int Ip;
