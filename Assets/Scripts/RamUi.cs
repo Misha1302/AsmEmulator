@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class RamFiller : MonoBehaviour
+public sealed class RamUi : MonoBehaviour
 {
     [SerializeField] private int cellsCount;
     [SerializeField] private GameObject cell;

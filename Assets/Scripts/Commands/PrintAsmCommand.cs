@@ -13,7 +13,7 @@
 
         public override void Execute()
         {
-            Engine.Print(Values[0].Value);
+            Engine.Out(Values[0].Value);
         }
     }
 }

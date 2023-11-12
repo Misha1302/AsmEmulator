@@ -70,8 +70,8 @@ public sealed class AsmEngine
         Ip = Commands.Count;
     }
 
-    public void Print<T>(T value)
+    public void Out<T>(T value)
     {
-        gameManager.UiManager.Popup(value.ToString());
+        gameManager.UiManager.InOutUi.Out(value.ToString());
     }
 }
