@@ -1,0 +1,11 @@
+stspd 15
+copy r0, 0
+
+add r0, 1
+cmp r0, 100
+jge 11
+
+print r0
+
+jmp 4
+print -1
